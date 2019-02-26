@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<!-- 配置常量 -->
+	<!-- 字符集 -->
+	<constant name="struts.i18n.encoding" value="UTF-8"></constant>
+	<!-- 开发模式 -->
+	<constant name="struts.devMode" value="false"></constant>
+	<!-- 主题 -->
+	<constant name="struts.ui.theme" value="simple"></constant>
+	<!-- 通用package -->
+	<package name="bos" namespace="/" extends="struts-default">
+		<interceptors>
+			<interceptor name="loginInterceptor" class="cn.hpn.bos.interceptor.LoginInterceptor">
+				<param name="excludeMethods">login</param>
+			</interceptor>
+			<interceptor-stack name="myStack">
+				<interceptor-ref name="loginInterceptor"/>
+				<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack"/>
+		<global-results>
+			<result name="toLogin" type="redirect">/login.jsp</result>
+			<result name="unauthorized" type="redirect">/unauthorized.jsp</result>
+			<result name="MethodError" type="redirect">/unauthorized.jsp</result>
+		</global-results>
+		<!-- 全局异常捕获 -->
+		<global-exception-mappings>
+			<exception-mapping result="unauthorized" exception="org.apache.shiro.authz.UnauthorizedException"></exception-mapping>
+		</global-exception-mappings>
+		<action name="page_*_*" >
+			<result type="dispatcher">/WEB-INF/pages/{1}/{2}.jsp</result>
+		</action>
+		<action name="UserAction_*" class="userAction" method="{1}">
+			<result name="error">/login.jsp</result>
+			<result name="home">/index.jsp</result>
+			<result name="toUser">/WEB-INF/pages/admin/userlist.jsp</result>
+		</action>
+		<action name="StaffAction_*" class="staffAction" method="{1}">
+			<result name="toStaff" type="dispatcher">/WEB-INF/pages/base/staff.jsp</result>
+		</action>
+		<action name="RegionAction_*" class="regionAction" method="{1}">
+			<result name="toRegion" type="dispatcher">/WEB-INF/pages/base/region.jsp</result>
+		</action>
+		<action name="SubareaAction_*" class="subareaAction" method="{1}">
+			<result name="toSubarea" type="dispatcher">/WEB-INF/pages/base/subarea.jsp</result>
+		</action>
+		<action name="DecidedzoneAction_*" class="decidedzoneAction" method="{1}">
+			<result name="toDecidedzone" type="dispatcher">/WEB-INF/pages/base/decidedzone.jsp</result>
+		</action>
+		<action name="NoticeBillAction_*" class="noticeBillAction" method="{1}">
+			<result name="toNoticeBill" type="dispatcher">/WEB-INF/pages/qupai/noticebill_add.jsp</result>
+		</action>
+		<action name="WorkordermanageAction_*" class="workordermanageAction" method="{1}">
+		</action>
+		<action name="FunctionAction_*" class="functionAction" method="{1}">
+			<result name="toFunction" type="dispatcher">/WEB-INF/pages/admin/function.jsp</result>
+		</action>
+		<action name="RoleAction_*" class="roleAction" method="{1}">
+			<result name="toRole" type="dispatcher">/WEB-INF/pages/admin/role.jsp</result>
+		</action>
+	</package>
+</struts>
